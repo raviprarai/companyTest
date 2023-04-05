@@ -134,9 +134,16 @@ exports.updateAllField = async (req, res) => {
         });
       }
     }
+    const d = req.body.date_of_birth;
+    var dob = new Date(d);
+    var month_diff = Date.now() - dob.getTime();
+    var age_dt = new Date(month_diff);
+    var year = age_dt.getUTCFullYear();
+    var age = Math.abs(year - 1970);
+    console.log("Age of the date entered: " + age + " years");
     const updatedleader = await usermodel.findByIdAndUpdate(
       req.params.id,
-      { $set: data },
+      { $set: data, age: age },
       { new: true }
     );
     return res.status(200).json({
