@@ -24,7 +24,7 @@ exports.addUser = async (req, res) => {
         .required(),
       gender: Joi.string().required(),
       date_of_birth: Joi.date().min("01-01-2009").max("now").iso().required(),
-      age: Joi.number().required(),
+      age: Joi.number(),
     });
     let result = userSchema.validate(req.body);
     if (result.error) {
@@ -37,12 +37,24 @@ exports.addUser = async (req, res) => {
     } else {
       const responce = await usermodel.create(data);
       const title = "User Data";
-      if (responce) {
+      const d = responce.date_of_birth;
+      var dob = new Date(d);
+      var month_diff = Date.now() - dob.getTime();
+      var age_dt = new Date(month_diff);
+      var year = age_dt.getUTCFullYear();
+      var age = Math.abs(year - 1970);
+      console.log("Age of the date entered: " + age + " years");
+      const result = await usermodel.findOneAndUpdate(
+        { email: req.body.email },
+        { age: age },
+        { new: true }
+      );
+      if (result) {
         return res.status(200).json({
           status: 1,
           message: "Add User Successfully",
-          responce,
-          title,
+          result,
+          title
         });
       } else {
         return res.status(400).json({
