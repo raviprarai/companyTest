@@ -1,7 +1,6 @@
 const usermodel = require("../model/userModel");
 const Joi = require("joi");
 const { userDetails } = require("../validators/allValidator");
-// ! all field enter
 exports.addUser = async (req, res) => {
   try {
     const data = req.body;
@@ -53,8 +52,8 @@ exports.addUser = async (req, res) => {
         return res.status(200).json({
           status: 1,
           message: "Add User Successfully",
+          title,
           result,
-          title
         });
       } else {
         return res.status(400).json({
@@ -174,7 +173,6 @@ exports.userDelete = async (req, res) => {
     });
   }
 };
-// ! Calculate automatically on basis of date of birth
 exports.addUserData = async (req, res) => {
   try {
     const data = req.body;
